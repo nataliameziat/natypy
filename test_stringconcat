@@ -1,0 +1,43 @@
+from time import time
+s = 'qwertyuiopasdfghjklzxcvbnm123456789'
+LOOPS = 10
+
+def timeit(f, *args):
+    def new_f(*args):
+        t = time()
+        result = f(*args)
+        print('{0} duration: {1}s'.format(f.__name__,time()-t))
+        print('Size: {result}'.format(result=result))
+    return new_f
+
+@timeit
+def concatenate1(s, loops):
+    """slow and memory consuming"""
+    r = s
+    for x in range(loops):
+        r += x*s
+    return len(r)
+
+@timeit
+def concatenate2(s, loops):
+    """faster using join in loop"""
+    r = s
+    for x in range(loops):
+        r = "".join((r, x*s))
+    return len(r)
+
+@timeit
+def concatenate3(s, loops):
+    """much faster using list"""
+    r = [s]
+    for x in range(loops):
+        r.append(x*s)
+    r = "".join(r)
+    return len(r)
+
+if __name__ == '__main__':
+    for loops in (100, 1000):
+        print("\nLoops {}".format(loops))
+        concatenate1(s, loops)
+        concatenate2(s, loops)
+        concatenate3(s, loops)
